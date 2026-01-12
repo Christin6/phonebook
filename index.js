@@ -56,6 +56,10 @@ app.get('/api/persons/:id', (req, res) => {
     }
 })
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+})
+
 app.delete('/api/persons/:id', (req, res) => {
     const id = req.params.id
     persons = persons.filter((person) => person.id !== id)
