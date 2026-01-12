@@ -32,10 +32,6 @@ app.use(express.static('dist'))
 morgan.token('data-sent', (req, res) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data-sent'))
 
-app.get('/', (req, res) => {
-    res.send('<h1>hello world</h2>')
-})
-
 app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
