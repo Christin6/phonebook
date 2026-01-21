@@ -1,50 +1,42 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
-const url = process.env.MONGODB_URL;
+const url = process.env.MONGODB_URL
 
-mongoose.set("strictQuery", false);
+mongoose.set('strictQuery', false)
 
-mongoose.connect(url, { family: 4 })
-    .then(result => {
-        console.log('connected to MongoDB')
-    })
-    .catch(error => {
-        console.log('error connecting to to MongoDB:', error.message)
-    })
+mongoose
+  .connect(url, { family: 4 })
+  .then((result) => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connecting to to MongoDB:', error.message)
+  })
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
-});
-
-personSchema.set("toJSON", {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString();
-        delete returnedObject._id;
-        delete returnedObject.__v;
+  name: {
+    type: String,
+    minLength: 3,
+    required: true,
+  },
+  number: {
+    type: String,
+    minLength: 8,
+    validate: {
+      validator: function (v) {
+        return /\d{2,3}-\d+/.test(v)
+      },
     },
-});
+    required: true
+  },
+})
 
-module.exports = mongoose.model("Person", personSchema);
+personSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  },
+})
 
-/* const person = new Person({
-    name: name,
-    number: num,
-});
-
-if (num === undefined) {
-    Person.find({}).then((result) => {
-        console.log("phonebook:")
-        result.forEach((p) => {
-            console.log(`${p.name} ${p.number}`);
-        });
-        mongoose.connection.close();
-    });
-} else {
-    person.save().then((result) => {
-        console.log(`added ${name} number ${num} to phonebook`);
-        mongoose.connection.close();
-    });
-}
-
- */
+module.exports = mongoose.model('Person', personSchema)
